@@ -1,0 +1,36 @@
+---
+title: "Untitled"
+output: html_document
+date: "2022-11-04"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Setup
+```{r}
+pacman::p_load(tidyverse)
+```
+
+## Load files
+```{r}
+for (i in 1:9) {
+  
+  data_path = 'task1_data/'
+  d <- read.table(paste(data_path, 'group',i,'_task1.tsv', sep=""), sep="\t", header=FALSE, skip = 11, 
+                  col.names=c('frame','t','x','y','z'))
+  
+  if (i <= 2) {
+    print(ggplot(d) + geom_point(aes(y, -x), color='orange'))
+  }  else {
+    print(ggplot(d) + geom_point(aes(-y, x), color='orange'))
+  }
+  
+}
+
+```
+
+
+
+

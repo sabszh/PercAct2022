@@ -27,15 +27,16 @@ Instead of their parameters, we use some other (often used) parameters for reach
 ### Loading packages
 For today we will be needing two packages, namely signal and tidyverse. Load them in.
 ```{r}
-
+pacman::p_load(tidyverse,signal)
 ```
-
 
 ### Reading in data file
 To illustrate how you can analyse motion data, 2-3 example files will be used. They can be found in the data folder. Start with just one file (ansuini_8475_3.csv), a grasping action; then later repeat the whole process with the other file (ansuini_8475_4.csv), a throwing action, so we can compare those two different actions. 
 In the end, you can also add a third file (ansuini_8475_2.csv), a pouring action. Note that in this file, there are missing data; however, as they occur later than our section of interest and will, in fact, be filtered out, we can ignore this. 
 ```{r}
-
+df <- read_csv("data/ansuini_8475_3.csv")
+#d <- read_csv('task2_data/ansuini_8475_4.csv') # throw
+#d <- read_csv('task2_data/ansuini_8475_2.csv') # pour
 ```
 
 ### Initial plotting to understand the data
@@ -45,23 +46,38 @@ To inspect the data create a plot that fulfills the following:
 
 Hint: use geom_line for each of the three markers
 ```{r}
-
+ggplot(df) +
+  geom_line(aes(frame, wristX), color='blue') + 
+  geom_line(aes(frame, thumbX), color='green') + 
+  geom_line(aes(frame, indexX), color='red')
 ```
 
 #### Cleaning the data
 From the plot you have just made you might see that the frame does not start at 0. Modify the frame variable in such a way that it starts at 0 and increases with 1 for each frame recorded.
 ```{r}
-
+df$frame <- df$frame-df$frame[1]
 ```
 
 Do the same for the timestamp. However, let's clean up the timestamp a little so that we can more easily interpret the numbers. Make a new column called 'time' that is the timestamp divided by 1000000. This will give us the time in seconds. (To check: Our sample rate is 300 Hz, so after 300 frames, we should have reached one second.)
 ```{r}
-
+df <- df %>% 
+  mutate(time=timestamp/1000000)
 ```
 
 Similarly, let's make the position data more meaningful. By dividing by 10, we get the values in cm. Do this for all the four markers and all three dimensions. (Although we only use index finger and thumb in the following.)
 ```{r}
-
+df$refX = df$refX/10 
+df$refY = df$refY/10 
+df$refZ = df$refZ/10 
+df$wristX = df$wristX/10 
+df$wristY = df$wristY/10 
+df$wristZ = df$wristZ/10 
+df$thumbX = df$thumbX/10 
+df$thumbY = df$thumbY/10 
+df$thumbZ = df$thumbZ/10 
+df$indexX = df$indexX/10 
+df$indexY = df$indexY/10 
+df$indexZ = df$indexZ/10
 ```
 
 
